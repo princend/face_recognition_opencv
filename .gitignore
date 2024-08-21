@@ -1,2 +1,4 @@
 face-venv/*
 face-venv/
+.venv/
+.venv/*
