@@ -2,14 +2,25 @@ import cv2
 import numpy as np
 from flask import Flask, request
 from main import preprocessing_encode, recognize
+import time
 
 app = Flask(__name__)
 
+    
 # 先載入將人臉特徵encode
 def load():
+    start_time = time.time()  # 記錄開始時間
+    print('execute load funcion ')
     global known_face_list, known_face_encodes
     known_face_list,known_face_encodes=preprocessing_encode()
-    
+    end_time = time.time()  # 記錄結束時間
+    execution_time = end_time - start_time  # 計算執行時間
+    print(f'Load function executed in {execution_time:.2f} seconds')
+
+
+@app.route("/")
+def hello():
+    return "Hello, World!"
 
 @app.route('/predict',methods=['POST'])
 def predict():
@@ -37,7 +48,8 @@ def helpfunc():
                 s += " "+filtered_list[i]['name']+","
     return s
 
-if __name__ == "__main__":
+print('__name__ is ',__name__)
+if __name__ == "app":
     print("Loading model... Please wait.")
     load()
-    app.run(debug=True, use_reloader=False, threaded=False)
+    app.run(debug=True,host="0.0.0.0", port=8080,  use_reloader=True)

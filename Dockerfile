@@ -7,8 +7,20 @@ WORKDIR /app
 # 将requirements.txt文件复制到工作目录
 COPY requirements.txt .
 
+# 安装系统依赖工具
+RUN apt-get update && apt-get install -y \
+    cmake \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0    
+
 # 安装Python依赖包
 RUN pip install --no-cache-dir -r requirements.txt
+
 
 # 将应用程序代码复制到工作目录
 COPY . .
@@ -20,4 +32,4 @@ ENV PORT=8080
 EXPOSE 8080
 
 # 运行Flask应用
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080","--timeout", "200", "app:app"]
