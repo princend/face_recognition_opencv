@@ -17,6 +17,8 @@ def load():
     execution_time = end_time - start_time  # 計算執行時間
     print(f'Load function executed in {execution_time:.2f} seconds')
 
+print("Loading model... Please wait.")
+load()
 
 @app.route("/")
 def hello():
@@ -49,7 +51,6 @@ def helpfunc():
     return s
 
 print('__name__ is ',__name__)
-if __name__ == "app":
-    print("Loading model... Please wait.")
-    load()
-    app.run(debug=True,host="0.0.0.0", port=8080,  use_reloader=True)
+if __name__ == "__main__":
+    print('will start to run app')
+    app.run(debug=True, host='0.0.0.0', port=8888)

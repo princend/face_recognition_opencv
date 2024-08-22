@@ -25,11 +25,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 将应用程序代码复制到工作目录
 COPY . .
 
-# 设置环境变量
-ENV PORT=8080
-
 # 对外暴露端口
-EXPOSE 8080
+EXPOSE 8000
 
 # 运行Flask应用
-CMD ["gunicorn", "--bind", "0.0.0.0:8080","--timeout", "200", "app:app"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:5000","--timeout", "200", "app:app"]
+CMD ["python", "app.py"]
+

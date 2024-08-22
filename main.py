@@ -20,6 +20,7 @@ def preprocessing_encode():
 
     # load image data by large model of face landmarks
     for data in known_face_list:
+        print(data)
         try:
             img = cv2.imread('known_singer_image/'+data['filename'])
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
