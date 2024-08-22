@@ -1,0 +1,23 @@
+# 使用Python的官方镜像作为基础镜像
+FROM python:3.10-slim
+
+# 设置工作目录
+WORKDIR /app
+
+# 将requirements.txt文件复制到工作目录
+COPY requirements.txt .
+
+# 安装Python依赖包
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 将应用程序代码复制到工作目录
+COPY . .
+
+# 设置环境变量
+ENV PORT=8080
+
+# 对外暴露端口
+EXPOSE 8080
+
+# 运行Flask应用
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
