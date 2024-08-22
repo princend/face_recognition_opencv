@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request
 from main import preprocessing_encode, recognize
 
 app = Flask(__name__)
