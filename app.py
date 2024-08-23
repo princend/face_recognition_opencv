@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from flask import Flask, request
+from flask import Flask, request,jsonify
 from main import preprocessing_encode, recognize
 import time
 
@@ -30,7 +30,7 @@ def predict():
     npimg = np.frombuffer(filestr, np.uint8)
     image  = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
     result= recognize(image,known_face_list,known_face_encodes,tolerance=0.6)
-    return result
+    return jsonify({"result": result})
 
 @app.route('/help', methods=['GET'])
 def helpfunc():
