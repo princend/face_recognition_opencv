@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
 from flask import Flask, request,jsonify
-from main import preprocessing_encode, recognize
+from main import load_encodings, preprocessing_encode, recognize
 import time
+import os
 
 app = Flask(__name__)
 
@@ -11,10 +12,17 @@ app = Flask(__name__)
 def load():
     start_time = time.time()  # 記錄開始時間
     print('execute load funcion ')
+    json_file= 'singer-map-with-encodings.json'
     global known_face_list, known_face_encodes
-    known_face_list,known_face_encodes=preprocessing_encode()
+    if not os.path.exists(json_file):
+       print(f'{json_file} not found. Running preprocessing_encode...')
+       known_face_list, known_face_encodes = preprocessing_encode()
+    else:
+        print(f'{json_file} found. Loading encodings...')
+        known_face_list, known_face_encodes = load_encodings(json_file)
     end_time = time.time()  # 記錄結束時間
     execution_time = end_time - start_time  # 計算執行時間
+    
     print(f'Load function executed in {execution_time:.2f} seconds')
 
 print("Loading model... Please wait.")
