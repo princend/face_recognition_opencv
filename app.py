@@ -1,12 +1,12 @@
+from chroma import query, storeToDb
 import cv2
 import numpy as np
 from flask import Flask, request,jsonify
-from main import load_encodings, preprocessing_encode, recognize
+from main import encode_current_face, load_encodings, preprocessing_encode, recognize
 import time
 import os
 
 app = Flask(__name__)
-
     
 # 先載入將人臉特徵encode
 def load():
@@ -20,6 +20,8 @@ def load():
     else:
         print(f'{json_file} found. Loading encodings...')
         known_face_list, known_face_encodes = load_encodings(json_file)
+    
+    storeToDb(known_face_list)
     end_time = time.time()  # 記錄結束時間
     execution_time = end_time - start_time  # 計算執行時間
     
@@ -37,8 +39,17 @@ def predict():
     filestr = request.files['image'].read()
     npimg = np.frombuffer(filestr, np.uint8)
     image  = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
-    result= recognize(image,known_face_list,known_face_encodes,tolerance=0.6)
-    return jsonify({"result": result})
+    # result= recognize(image,known_face_list,known_face_encodes,tolerance=0.6)
+    encode_face_list = encode_current_face(image)
+    db_result= query(encode_face_list)
+    distance=db_result['distances'][0][0]
+    # 距離差異
+    tolerance=0.3
+    if(distance>tolerance):
+        return jsonify({"result":"unknown","distance":distance})
+    else:
+        name_value = db_result['metadatas'][0][0]['name']
+        return jsonify({"result": name_value,"distance":distance})
 
 @app.route('/help', methods=['GET'])
 def helpfunc():

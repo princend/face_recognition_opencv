@@ -38,6 +38,14 @@ def preprocessing_encode():
     return known_face_list, [data['encode'] for data in known_face_list]
     # return known_face_list,known_face_encodes
     
+# encode 要辨識的圖片
+def encode_current_face(img_input, tolerance=0.6)->list:
+    img = cv2.cvtColor(img_input, cv2.COLOR_BGR2RGB)
+    cur_face_locs = face_recognition.face_locations(img)
+    cur_face_encodes = face_recognition.face_encodings(img, cur_face_locs, model='small')
+    cur_face_encodes_list=cur_face_encodes[0].tolist()
+    return cur_face_encodes_list
+
 #辨認    
 def recognize(img_input, known_face_list, known_face_encodes, tolerance=0.6) -> str:
     img = cv2.cvtColor(img_input, cv2.COLOR_BGR2RGB)
